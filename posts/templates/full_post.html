@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<script src="https://www.w3schools.com/lib/w3.js"></script>
+
+<body>
+    <div w3-include-html="{% url 'content_post' post.id %}"></div>
+
+    <div>
+        <form action="{% url 'send_commentary' post.id %}" method="post">
+            {% csrf_token %}
+            Pseudo : <input type="text" name="author"><br />
+            <input type="text" name="content"><br /><br />
+            <input type="submit" name="Envoyer">
+        </form>
+    </div>
+
+    {% for commentary in post.commentary_set.all %}
+        <div w3-include-html="{% url 'commentary' commentary.id %}"></div>
+    {% endfor %}
+
+    <script>
+        w3.includeHTML();
+    </script>
+</body>
+</html>

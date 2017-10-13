@@ -1,0 +1,6 @@
+<div>
+    <a href="{% url 'post' post.id %}"><h1>{{ post.title }}</h1></a>
+    <p>Par {{ post.author }} le {{ post.pub_date}} </p>
+    <p>{{ post.content }}</p>
+    <a href="{% url 'post_commentaries' post.id %}">{{ post.commentary_set.count }} commentaires</a>
+</div>
