@@ -3,11 +3,20 @@
 {% block content %}
     {% include 'core/post.html' %}
 
+
+    {% if error_message %}
+        <div><strong>{{ error_message }}</strong></div>
+    {% endif %}
+
     <div>
-        <form action="{% url 'send_commentary' post.id %}" method="post">
+        <form action="{% url 'send_commentary' post.id %}" method="post" id="post_comment">
             {% csrf_token %}
-            Pseudo : <input type="text" name="author"><br />
-            <input type="text" name="content"><br /><br />
+            {% if user.is_authenticated %}
+                Pseudo : <input type="text" name="author" value="{{ user.username }}" disabled><br>
+            {% else %}
+                Pseudo : <input type="text" name="author" value="{{ author }}"><br>
+            {% endif %}
+            <textarea rows="5" cols="50" name="content" form="post_comment">{{ content }}</textarea><br>
             <div class="g-recaptcha" data-sitekey="6LcbCjUUAAAAAGxUbCeibQ62Ina85IWmMhPCFCzS"></div>
             <input type="submit" name="Envoyer">
         </form>

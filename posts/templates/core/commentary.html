@@ -1,4 +1,9 @@
-<div>
-    <p>{{ commentary.author }} a écrit le {{ commentary.pub_date }}</p>
-    <p>{{ commentary.content }}</p>
-</div>
+<article class="box post post-excerpt">
+    <header>
+        <p href="{% url 'commentary' commentary.id %}">{{ commentary.author }} has written the {{ commentary.pub_date|date:"F j, G:i" }}</p>
+    </header>
+
+    <p>
+        {{ commentary.content }}
+    </p>    
+</article>

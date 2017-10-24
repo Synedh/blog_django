@@ -1,8 +1,0 @@
-<div class="element_corps">
-    <a href="{% url 'post' post.id %}"><h2>{{ post.title }}</h2></a>
-    <h5>Par {{ post.author }} le {{ post.pub_date}} </h5>
-    <p>{{ post.content }}</p>
-    <a href="{% url 'post_commentaries' post.id %}">
-    	{{ post.commentary_set.count }} commentaire{% if post.commentary_set.count > 1 %}s{% endif %}
-    </a>
-</div>

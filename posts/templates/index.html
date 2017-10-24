@@ -1,13 +1,11 @@
 {% extends 'core/overall.html' %}
 
 {% block content %}
-    <div id="corps">
     {% if latest_post_list %}
         {% for post in latest_post_list %}
-        {% include "post.html" %}
+        {% include "core/post.html" %}
         {% endfor %}
     {% else %}
         <p>No post is available.</p>
     {% endif %}
-    </div>
 {% endblock %}
