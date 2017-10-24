@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html>
-<script src="https://www.w3schools.com/lib/w3.js"></script>
+{% extends 'core/overall.html' %}
 
-<body>
+{% block content %}
     {% for commentary in post.commentary_set.all %}
-        <div w3-include-html="{% url 'commentary' commentary.id %}"></div>
+        {% include 'core/commentary.html' with commentary=commentary %}
     {% endfor %}
-
-    <script>
-        w3.includeHTML();
-    </script>
-</body>
-</html>
+{% endblock %}

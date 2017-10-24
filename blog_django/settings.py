@@ -56,7 +56,7 @@ ROOT_URLCONF = 'blog_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +71,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_django.wsgi.application'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -96,6 +99,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = 'index'
+
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LdRSRYUAAAAAOnk5yomm1dI9BmQkJWTg_wIlMJ_'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

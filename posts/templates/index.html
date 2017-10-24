@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html>
-<script src="https://www.w3schools.com/lib/w3.js"></script>
+{% extends 'core/overall.html' %}
 
-<body>
+{% block content %}
+    <div id="corps">
     {% if latest_post_list %}
         {% for post in latest_post_list %}
-        <div w3-include-html="{% url 'content_post' post.id %}"></div>
+        {% include "post.html" %}
         {% endfor %}
     {% else %}
         <p>No post is available.</p>
     {% endif %}
-
-    <script>
-        w3.includeHTML();
-    </script>
-</body>
-</html>
+    </div>
+{% endblock %}

@@ -1,25 +1,19 @@
-<!DOCTYPE html>
-<html>
-<script src="https://www.w3schools.com/lib/w3.js"></script>
+{% extends 'core/overall.html' %}
 
-<body>
-    <div w3-include-html="{% url 'content_post' post.id %}"></div>
+{% block content %}
+    {% include 'core/post.html' %}
 
     <div>
         <form action="{% url 'send_commentary' post.id %}" method="post">
             {% csrf_token %}
             Pseudo : <input type="text" name="author"><br />
             <input type="text" name="content"><br /><br />
+            <div class="g-recaptcha" data-sitekey="6LcbCjUUAAAAAGxUbCeibQ62Ina85IWmMhPCFCzS"></div>
             <input type="submit" name="Envoyer">
         </form>
     </div>
 
     {% for commentary in post.commentary_set.all %}
-        <div w3-include-html="{% url 'commentary' commentary.id %}"></div>
+        {% include 'core/commentary.html' with commentary=commentary %}
     {% endfor %}
-
-    <script>
-        w3.includeHTML();
-    </script>
-</body>
-</html>
+{% endblock %}
