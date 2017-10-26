@@ -8,4 +8,21 @@
     {% else %}
         <p>No post is available.</p>
     {% endif %}
+    <div class="pagination">
+        {% if pages.first != current_page %}
+        <a href="#" class="button previous">Previous Page</a>
+        {% endif %}
+        <div class="pages">
+            {% for page in pages %}
+            {% if page == current_page %}
+            <a href="#" class="active">{{ page }}</a>
+            {% else %}
+            <a href="#">{{ page }}</a>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% if pages.last != current_page %}
+        <a href="#" class="button next">Next Page</a>
+        {% endif %}
+    </div>
 {% endblock %}

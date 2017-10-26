@@ -9,13 +9,13 @@
 
         <ul class="stats">
             <li><a href="{% url 'post_commentaries' post.id %}" class="icon fa-comment">{{ post.commentary_set.count }}</a></li>
-            <li><a href="#" class="icon fa-eye">NaN</a></li>
+            <li><a class="icon fa-eye">{{ post.view }}</a></li>
         </ul>
     </div>
     <!-- {% load static %} -->
     <a href="#" class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></a>
 
     <p>
-        {{ post.content }}
+        {{ post.content|safe }}
     </p>    
 </article>

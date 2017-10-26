@@ -10,7 +10,7 @@ class CommentaryInline(admin.TabularInline):
 
 
 class PostAdmin(admin.ModelAdmin):
-	list_display = ['pub_date', 'title', 'commentary_count']
+	list_display = ['pub_date', 'title', 'commentary_count', 'view']
 	list_filter = ['pub_date']
 	search_fields =['title', 'content']
 	def get_queryset(self, request):
@@ -22,7 +22,7 @@ class PostAdmin(admin.ModelAdmin):
 	commentary_count.admin_order_field = 'commentary_count'
 
 	fieldsets = [
-		(None, {'fields': ['pub_date','author']}),
+		(None, {'fields': ['pub_date','author', 'view']}),
 		('Content', {'fields': ['title', 'content']})
 	]
 	inlines = [CommentaryInline]

@@ -12,7 +12,7 @@
         <form action="{% url 'send_commentary' post.id %}" method="post" id="post_comment">
             {% csrf_token %}
             {% if user.is_authenticated %}
-                Pseudo : <input type="text" name="author" value="{{ user.username }}" disabled><br>
+                Pseudo : <input type="text" name="author" value="{{ user.username }}" readonly style="cursor: not-allowed;"><br>
             {% else %}
                 Pseudo : <input type="text" name="author" value="{{ author }}"><br>
             {% endif %}
@@ -24,5 +24,8 @@
 
     {% for commentary in post.commentary_set.all %}
         {% include 'core/commentary.html' with commentary=commentary %}
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
     {% endfor %}
 {% endblock %}

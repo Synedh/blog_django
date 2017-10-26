@@ -10,15 +10,29 @@ from django.utils import timezone
 from .models import Post, Commentary
 
 
-def index(request):
-    posts = Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
-    return render(request, 'index.html', {'latest_post_list': posts})
+def index(request, page=1):
+    page = int(page)
+    posts = Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
+    if (page * 5 - 5 < 0) or (page * 5 - 5 > len(posts)) :
+        raise Http404("Page not found")
+    posts = posts[(page - 1) * 5:(page - 1) * 5 + 5]
+    pages = range(1, int((len(posts) - 1) / 5) + 3)
+    return render(request, 'index.html', {
+                                        'latest_post_list': posts,
+                                        'pages': pages,
+                                        'current_page': page})
 
 
 def post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     if post.pub_date > timezone.now():
         raise Http404("Page not found")
+    if 'post_view' not in request.session.keys():
+        request.session['post_view'] = []
+    if post_id not in request.session['post_view']:
+        post.view += 1
+        post.save()
+        request.session['post_view'] += post_id
     return render(request, 'full_post.html', {'post': post})
 
 

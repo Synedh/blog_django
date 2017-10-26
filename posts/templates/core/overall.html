@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <title>Blog</title>
     <!-- {% load static %} -->
     <!-- <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" /> -->
     <meta charset="utf-8">
@@ -45,11 +46,9 @@
                 <h2>Recent Posts</h2>
             </header>
             <ul>
-                <li><a href="#">Lorem ipsum dolor</a></li>
-                <li><a href="#">Feugiat nisl aliquam</a></li>
-                <li><a href="#">Sed dolore magna</a></li>
-                <li><a href="#">Malesuada commodo</a></li>
-                <li><a href="#">Ipsum metus nullam</a></li>
+                {% for post in recent_posts %}
+                <li><a href="{% url 'post' post.id %}">{{ post.title }}</a></li>
+                {% endfor %}
             </ul>
         </section>
 
@@ -70,7 +69,10 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4" class="pad"><span>&nbsp;</span></td>
+                            <td><span>&nbsp;</span></td>
+                            <td><span>&nbsp;</span></td>
+                            <td><span>&nbsp;</span></td>
+                            <td><span>&nbsp;</span></td>
                             <td><span>1</span></td>
                             <td><span>2</span></td>
                             <td><span>3</span></td>
@@ -107,7 +109,6 @@
                             <td><span>26</span></td>
                             <td><span>27</span></td>
                             <td><span>28</span></td>
-                            <td class="pad" colspan="3"><span>&nbsp;</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -128,7 +129,7 @@
                 {% csrf_token %}
                 <ul>
                     <li><input type="text" name="username" placeholder="username"></li>
-                    <li><input type="text" name="password" placeholder="password"></li>
+                    <li><input type="password" name="password" placeholder="password"></li>
                     <li><center><input type="submit" name="login" value="Login"></center></li>
                 </ul>
             </form>

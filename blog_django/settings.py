@@ -71,10 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_django.wsgi.application'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
-)
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -102,6 +98,8 @@ USE_TZ = True
 LOGIN_REDIRECT_URL = 'index'
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LdRSRYUAAAAAOnk5yomm1dI9BmQkJWTg_wIlMJ_'
+
+TEMPLATES[0]['OPTIONS']['context_processors'].append("posts.context_processors.posts_processor")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

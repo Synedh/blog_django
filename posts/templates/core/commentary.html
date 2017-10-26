@@ -1,9 +1,6 @@
-<article class="box post post-excerpt">
+<article class="box post post-excerpt commentary">
     <header>
-        <p href="{% url 'commentary' commentary.id %}">{{ commentary.author }} has written the {{ commentary.pub_date|date:"F j, G:i" }}</p>
+        <p><a href="{% url 'commentary' commentary.id %}" style="text-decoration: none">{{ commentary.author }} has written on {{ commentary.pub_date|date:"F j, G:i" }}</a></p>
     </header>
-
-    <p>
-        {{ commentary.content }}
-    </p>    
+    <p>{{ commentary.content }}</p>
 </article>

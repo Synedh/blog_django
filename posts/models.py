@@ -5,6 +5,7 @@ class Post(models.Model):
     title = models.CharField(max_length=1024)
     content = models.TextField()
     author = models.CharField(max_length=1024)
+    view = models.IntegerField(default=0)
     pub_date = models.DateTimeField('date published')
 
     def __str__(self):

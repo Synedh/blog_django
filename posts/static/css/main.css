@@ -2756,6 +2756,10 @@
 				padding-bottom: 5em;
 				margin-bottom: 6em;
 			}
+				.box.post.commentary {
+					padding-bottom: 0em;
+					margin-bottom: 0em;
+				}
 
 				.box.post header > p {
 					font-size: 1em;

@@ -3,5 +3,8 @@
 {% block content %}
     {% for commentary in post.commentary_set.all %}
         {% include 'core/commentary.html' with commentary=commentary %}
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
     {% endfor %}
 {% endblock %}
