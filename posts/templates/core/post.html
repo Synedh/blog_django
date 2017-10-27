@@ -1,7 +1,7 @@
 <article class="box post post-excerpt">
     <header>
         <h2><a href="{% url 'post' post.id %}">{{ post.title }}</a></h2>
-        <p>by {{ post.author }}</p>
+        <p>by <a href="{% url 'posts_by_author' post.author %}">{{ post.author }}</a></p>
     </header>
     <div class="info">
 
@@ -13,9 +13,18 @@
         </ul>
     </div>
     <!-- {% load static %} -->
-    <a href="#" class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></a>
+    <a href="{% url 'post' post.id %}" class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></a>
 
+    {% if 'post' not in request.path %}
+    <p>{{ post.content_in_index|safe }}</p>
+    <p><a class="cutlink" href="{% url 'post' post.id %}">[...]</a></p>
+    {% else %}
+    {{ post.content|safe }}
+    {% endif %}
     <p>
-        {{ post.content|safe }}
-    </p>    
+        {% for tag in post.tag.all %}
+        <a class="cutlink" href="{% url 'posts_by_tag' tag %}">{{ tag }}</a>
+        {% if tag != post.tag.all.last %},{% endif %}
+        {% endfor %}
+    </p>
 </article>

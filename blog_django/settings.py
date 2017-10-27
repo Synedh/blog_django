@@ -100,6 +100,7 @@ LOGIN_REDIRECT_URL = 'index'
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LdRSRYUAAAAAOnk5yomm1dI9BmQkJWTg_wIlMJ_'
 
 TEMPLATES[0]['OPTIONS']['context_processors'].append("posts.context_processors.posts_processor")
+TEMPLATES[0]['OPTIONS']['context_processors'].append("posts.context_processors.tags_processor")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

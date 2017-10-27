@@ -13,15 +13,18 @@ from .models import Post, Commentary
 def index(request, page=1):
     page = int(page)
     posts = Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
-    if (page * 5 - 5 < 0) or (page * 5 - 5 > len(posts)) :
+    if (page == 0) or (page * 5 - 4 > len(posts)) :
         raise Http404("Page not found")
+    pages = [i for i in range(1, int((len(posts) - 1) / 5) + 2)]
     posts = posts[(page - 1) * 5:(page - 1) * 5 + 5]
-    pages = range(1, int((len(posts) - 1) / 5) + 3)
-    return render(request, 'index.html', {
-                                        'latest_post_list': posts,
-                                        'pages': pages,
-                                        'current_page': page})
-
+    # Pagination
+    # replace numbers by '...' if there is more than 3 pages before or after current page
+    pages = ((pages[0:page - 1] if len(pages[0:page - 1]) < 4 else [pages[0], '...', pages[page - 2]])
+            + [pages[page - 1]] 
+            + (pages[page:] if len(pages[page:]) < 4 else [pages[page], '...', pages[-1]]))
+    return render(request, 'index.html', {'posts': posts,
+                                          'pages': pages,
+                                          'current_page': page})
 
 def post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
@@ -84,8 +87,18 @@ def commentary(request, commentary_id):
 
 def search(request):
     query = request.POST['search']
-    posts = Post.objects.filter(title__icontains=query).filter(pub_date__lte=timezone.now())
-    return render(request, 'search.html', {'posts': posts, 'search': query})
+    posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(title__icontains=query).order_by('-pub_date')
+    return render(request, 'index.html', {'posts': posts, 'search': query})
+
+
+def posts_by_author(request, author):
+    posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(author__iexact=author).order_by('-pub_date')
+    return render(request, 'index.html', {'posts': posts})
+
+
+def posts_by_tag(request, tags):
+    posts = Post.objects.filter(pub_date__lte=timezone.now()).fitler().order_by('-pub_date')
+    return render(request, 'index.html', {'posts': posts})
 
 
 def login(request):

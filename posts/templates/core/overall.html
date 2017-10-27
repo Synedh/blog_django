@@ -17,10 +17,14 @@
 
         <nav id="nav">
             <ul>
+                {% if request.path == '/' or request.path == '/1/' %}
                 <li class="current"><a href="{% url 'index' %}">Last posts</a></li>
+                {% else %}
+                <li><a href="{% url 'index' %}">Last posts</a></li>
+                {% endif %}
                 <li><a href="#">Archives</a></li>
                 {% if user.is_superuser %}
-                <li><a href="/admin/">Go to administration</a></li>
+                <li><a href="/admin/">Admin pannel</a></li>
                 {% endif %}
         </nav>
 
@@ -46,8 +50,19 @@
                 <h2>Recent Posts</h2>
             </header>
             <ul>
-                {% for post in recent_posts %}
-                <li><a href="{% url 'post' post.id %}">{{ post.title }}</a></li>
+                {% for recent_post in recent_posts %}
+                <li><a href="{% url 'post' recent_post.id %}">{{ recent_post.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="box recent-posts">
+            <header>
+                <h2>Most used tags</h2>
+            </header>
+            <ul>
+                {% for used_tag in most_used_tags %}
+                <li><a href="{% url 'posts_by_tag' used_tag %}">{{ used_tag }}</a> ({{ used_tag.post_set.count }})</li>
                 {% endfor %}
             </ul>
         </section>
