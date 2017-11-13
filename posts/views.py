@@ -7,18 +7,28 @@ from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Post, Commentary
+from .models import Post, Commentary, Option
 
 
 def index(request, page=1):
     page = int(page)
-    posts = Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
-    if (page == 0) or (page * 5 - 4 > len(posts)) :
+
+    posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(show_post=True).order_by('-pub_date')
+
+    try:
+        post_per_page = Option.objects.all()[0].nb_post_page
+        if post_per_page > len(posts):
+            post_per_page = len(posts)
+    except:
+        post_per_page = 5
+
+    if (page == 0) or (page * post_per_page - 4 > len(posts)) :
         raise Http404("Page not found")
-    pages = [i for i in range(1, int((len(posts) - 1) / 5) + 2)]
-    posts = posts[(page - 1) * 5:(page - 1) * 5 + 5]
+
     # Pagination
     # replace numbers by '...' if there is more than 3 pages before or after current page
+    pages = [i for i in range(1, int((len(posts) - 1) / post_per_page) + 2)]
+    posts = posts[(page - 1) * post_per_page:(page - 1) * post_per_page + post_per_page]
     pages = ((pages[0:page - 1] if len(pages[0:page - 1]) < 4 else [pages[0], '...', pages[page - 2]])
             + [pages[page - 1]] 
             + (pages[page:] if len(pages[page:]) < 4 else [pages[page], '...', pages[-1]]))
@@ -82,6 +92,8 @@ def post_commentaries(request, post_id):
 
 def commentary(request, commentary_id):
     commentary = get_object_or_404(Commentary, pk=commentary_id)
+    if not commentary.validated:
+        raise Http404("Page not found")
     return render(request, 'commentary_wrapper.html', {'commentary': commentary})
 
 
@@ -97,14 +109,17 @@ def posts_by_author(request, author):
 
 
 def posts_by_tag(request, tags):
-    posts = Post.objects.filter(pub_date__lte=timezone.now()).fitler().order_by('-pub_date')
+    tags = tags.split('/')
+    posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(tag__tag__in=tags).order_by('-pub_date')
     return render(request, 'index.html', {'posts': posts})
 
 
 def login(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
+    user = authenticate(
+        request,
+        username=request.POST['username'],
+        password=request.POST['password']
+    )
     if user is not None:
         auth_login(request, user)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

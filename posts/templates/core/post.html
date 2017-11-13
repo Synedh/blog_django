@@ -23,8 +23,11 @@
     {% endif %}
     <p>
         {% for tag in post.tag.all %}
+        {% if tag != post.tag.all.last %}
+        <a class="cutlink" href="{% url 'posts_by_tag' tag %}">{{ tag }}</a>,
+        {% else %}
         <a class="cutlink" href="{% url 'posts_by_tag' tag %}">{{ tag }}</a>
-        {% if tag != post.tag.all.last %},{% endif %}
+        {% endif %}
         {% endfor %}
     </p>
 </article>

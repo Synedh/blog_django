@@ -12,6 +12,7 @@
         </header>
     </article>
     {% endif %}
+    {% if pages|length > 1 %}
     <div class="pagination">
         {% if pages|first != current_page %}
         <a href="{% url 'index' current_page|add:"-1" %}" class="button previous">Previous Page</a>
@@ -31,4 +32,5 @@
         <a href="{% url 'index' current_page|add:"1" %}" class="button next">Next Page</a>
         {% endif %}
     </div>
+    {% endif %}
 {% endblock %}

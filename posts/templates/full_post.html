@@ -3,26 +3,31 @@
 {% block content %}
     {% include 'core/post.html' %}
 
+    {% if post.allow_comments or user.is_superuser %}
+        {% if error_message %}
+            <div><strong>{{ error_message }}</strong></div>
+        {% endif %}
 
-    {% if error_message %}
-        <div><strong>{{ error_message }}</strong></div>
+        <div>
+            <form action="{% url 'send_commentary' post.id %}" method="post" id="post_comment">
+                {% csrf_token %}
+                {% if user.is_authenticated %}
+                    Pseudo : <input type="text" name="author" value="{{ user.username }}" readonly style="cursor: not-allowed;"><br>
+                {% else %}
+                    Pseudo : <input type="text" name="author" value="{{ author }}"><br>
+                {% endif %}
+                <textarea rows="5" cols="50" name="content" form="post_comment">{{ content }}</textarea><br>
+                <div class="g-recaptcha" data-sitekey="6LcbCjUUAAAAAGxUbCeibQ62Ina85IWmMhPCFCzS"></div>
+                <input type="submit" name="Envoyer">
+            </form>
+        </div>
+    {% else %}
+    <header>
+        <p>You cannot post any comment at this moment.</p>
+    </header>
     {% endif %}
 
-    <div>
-        <form action="{% url 'send_commentary' post.id %}" method="post" id="post_comment">
-            {% csrf_token %}
-            {% if user.is_authenticated %}
-                Pseudo : <input type="text" name="author" value="{{ user.username }}" readonly style="cursor: not-allowed;"><br>
-            {% else %}
-                Pseudo : <input type="text" name="author" value="{{ author }}"><br>
-            {% endif %}
-            <textarea rows="5" cols="50" name="content" form="post_comment">{{ content }}</textarea><br>
-            <div class="g-recaptcha" data-sitekey="6LcbCjUUAAAAAGxUbCeibQ62Ina85IWmMhPCFCzS"></div>
-            <input type="submit" name="Envoyer">
-        </form>
-    </div>
-
-    {% for commentary in post.commentary_set.all %}
+    {% for commentary in post.commentary_set.all_validated %}
         {% include 'core/commentary.html' with commentary=commentary %}
         {% if not forloop.last %}
         <hr>
