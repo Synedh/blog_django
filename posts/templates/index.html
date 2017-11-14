@@ -15,7 +15,7 @@
     {% if pages|length > 1 %}
     <div class="pagination">
         {% if pages|first != current_page %}
-        <a href="{% url 'index' current_page|add:"-1" %}" class="button previous">Previous Page</a>
+        <a href="{% url 'index' page=current_page|add:"-1" %}" class="button previous">Previous Page</a>
         {% endif %}
         <div class="pages">
             {% for page in pages %}
@@ -24,12 +24,12 @@
             {% elif page == '...' %}
             <span>&hellip;</span>
             {% else %}
-            <a href="{% url 'index' page %}">{{ page }}</a>
+            <a href="{% url 'index' page=page %}">{{ page }}</a>
             {% endif %}
             {% endfor %}
         </div>
         {% if pages|last != current_page %}
-        <a href="{% url 'index' current_page|add:"1" %}" class="button next">Next Page</a>
+        <a href="{% url 'index' page=current_page|add:"1" %}" class="button next">Next Page</a>
         {% endif %}
     </div>
     {% endif %}

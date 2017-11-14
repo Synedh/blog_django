@@ -13,7 +13,7 @@ class Post(models.Model):
     content = models.TextField()
     image = models.CharField(max_length=1024)
     author = models.CharField(max_length=1024)
-    view = models.IntegerField(default=0)
+    view = models.PositiveIntegerField(default=0)
     show_post = models.BooleanField(default=True)
     allow_comments = models.BooleanField(default=True)
     pub_date = models.DateTimeField('date published')
@@ -47,8 +47,9 @@ class Commentary(models.Model):
 
 
 class Option(models.Model):
-    nb_post_page = models.IntegerField(default=5)
-    message = models.TextField(default="")
+    name = models.CharField(max_length=256, default="")
+    nb_post_page = models.PositiveIntegerField(default=5)
+    message = models.CharField(max_length=256, default="")
     recent_posts = models.BooleanField(default=True)
     most_used_tags = models.BooleanField(default=True)
     used = models.BooleanField(default=False)

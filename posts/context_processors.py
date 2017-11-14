@@ -9,4 +9,7 @@ def tags_processor(request):
     return {'most_used_tags': sorted(Tag.objects.all(), key=lambda x: x.post_set.count())[:5]}
 
 def options_processor(request):
-    return {'options': Option.objects.all()[0]}
+    try:
+        return {'options': Option.objects.filter(used=True)[0]}
+    except IndexError:
+        return {'options': {'message': '', 'recent_posts': True, 'most_used_tags': True}}

@@ -64,7 +64,18 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Option)
 class OptionAdmin(admin.ModelAdmin):
-    list_display = ['nb_post_page', 'message', 'recent_posts', 'most_used_tags']
+    list_display = ['name', 'used', 'nb_post_page', 'message', 'recent_posts', 'most_used_tags']
     fieldsets = [
-        (None, {'fields': ['nb_post_page', 'message', 'recent_posts', 'most_used_tags']})
+        (None, {'fields': ['name', 'nb_post_page', 'message', 'recent_posts', 'most_used_tags', 'used']})
     ]
+
+    def use_selected(self, request, queryset):
+        Option.objects.update(used=False)
+        queryset.update(used=True)
+    use_selected.short_description = "Use selected options"
+
+    def unuse_selected(self, request, queryset):
+        queryset.update(used=False)
+    unuse_selected.short_description = "Do not use selected options"
+
+    actions = [use_selected, unuse_selected]

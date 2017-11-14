@@ -10,31 +10,35 @@ from django.utils import timezone
 from .models import Post, Commentary, Option
 
 
-def index(request, page=1):
-    page = int(page)
-
-    posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(show_post=True).order_by('-pub_date')
-
+def pagination(posts, page):
     try:
-        post_per_page = Option.objects.all()[0].nb_post_page
-        if post_per_page > len(posts):
+        post_per_page = Option.objects.filter(used=True)[0].nb_post_page
+        if post_per_page > len(posts) or post_per_page == 0:
             post_per_page = len(posts)
-    except:
+    except IndexError:
         post_per_page = 5
 
-    if (page == 0) or (page * post_per_page - 4 > len(posts)) :
+    if (page < 0) or (page * post_per_page - 4 > len(posts)) :
         raise Http404("Page not found")
 
-    # Pagination
     # replace numbers by '...' if there is more than 3 pages before or after current page
     pages = [i for i in range(1, int((len(posts) - 1) / post_per_page) + 2)]
     posts = posts[(page - 1) * post_per_page:(page - 1) * post_per_page + post_per_page]
     pages = ((pages[0:page - 1] if len(pages[0:page - 1]) < 4 else [pages[0], '...', pages[page - 2]])
             + [pages[page - 1]] 
             + (pages[page:] if len(pages[page:]) < 4 else [pages[page], '...', pages[-1]]))
-    return render(request, 'index.html', {'posts': posts,
-                                          'pages': pages,
-                                          'current_page': page})
+    return {
+        'posts':posts, 
+        'pages': pages,
+        'current_page': page
+    }
+
+
+def index(request, page=1):
+    posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(show_post=True).order_by('-pub_date')
+    options = pagination(posts, int(page))
+    options['current'] = 'index'
+    return render(request, 'index.html', options)
 
 def post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
@@ -97,13 +101,18 @@ def commentary(request, commentary_id):
     return render(request, 'commentary_wrapper.html', {'commentary': commentary})
 
 
-def search(request):
+def search(request, page=1):
     query = request.POST['search']
     posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(title__icontains=query).order_by('-pub_date')
-    return render(request, 'index.html', {'posts': posts, 'search': query})
+    if len(posts) == 0:
+        return render(request, 'index.html', {'search': query, 'current': 'search'})
+    options = pagination(posts, int(page) if page else 1)
+    options['search'] = query
+    options['current'] = 'search'
+    return render(request, 'index.html', options)
 
 
-def posts_by_author(request, author):
+def posts_by_author(request, author, page=1):
     posts = Post.objects.filter(pub_date__lte=timezone.now()).filter(author__iexact=author).order_by('-pub_date')
     return render(request, 'index.html', {'posts': posts})
 
